@@ -16,28 +16,27 @@ class BlagueRepository extends ServiceEntityRepository
         parent::__construct($registry, Blague::class);
     }
 
-    //    /**
-    //     * @return Blague[] Returns an array of Blague objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('b')
-    //            ->andWhere('b.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('b.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findRandomBlague()
+    {
+        // total of blagues
+        $count = $this->createQueryBuilder('b')
+            ->select('COUNT(b.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
 
-    //    public function findOneBySomeField($value): ?Blague
-    //    {
-    //        return $this->createQueryBuilder('b')
-    //            ->andWhere('b.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if ($count == 0) {
+            return null;
+        }
+
+        // random offset
+        $randomOffset = rand(0, $count - 1);
+
+        // return random blague 
+        return $this->createQueryBuilder('b')
+            ->setFirstResult($randomOffset)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 }
