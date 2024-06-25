@@ -3,24 +3,35 @@
 namespace App\Controller;
 
 use App\Entity\Blague;
+use App\Repository\BlagueRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-#[Route('/blague')]
+use Symfony\Component\Serializer\SerializerInterface;
+
+#[Route('/blagues')]
 class BlagueController extends AbstractController
 {
-    #[Route('/', name: 'blague.list')]
-    public function index(): Response
+    #[Route('/', name: 'blagues.list')]
+    public function index(
+        BlagueRepository $blagueRepository,
+        SerializerInterface $serializer
+
+    ): Response
     {
-        return $this->render('blague/index.html.twig', [
-            'controller_name' => 'BlagueController',
-        ]);
+        $blagues = $blagueRepository->findAll();
+       
+        // Conversion des objets en JSON
+        $jsonContent = $serializer->serialize($blagues, 'json', ['groups' => 'blague:read']);
+        
+        return new JsonResponse($jsonContent, 200, [], true);
+
     }
 
-    #[Route('/add', name: 'blague.add')]
+    #[Route('/add', name: 'blagues.add')]
     public function addBlague(
         Request $request,
         ManagerRegistry $doctrine
@@ -48,6 +59,5 @@ class BlagueController extends AbstractController
             ]
         ]);
     }
-
 
 }
