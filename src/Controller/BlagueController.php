@@ -60,4 +60,16 @@ class BlagueController extends AbstractController
         ]);
     }
 
+    #[Route('/{id<\d+>}', name: 'blagues.view')]
+    public function viewBlagueById(
+        Blague $blague = null,
+        SerializerInterface $serializer
+    ): JsonResponse
+    {
+        // Conversion des objets en JSON
+        $jsonContent = $serializer->serialize($blague, 'json', ['groups' => 'blague:read']);
+        
+        return new JsonResponse($jsonContent, 200, [], true);
+    }
+
 }
