@@ -4,8 +4,10 @@ namespace App\Entity;
 
 use App\Repository\BlagueRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BlagueRepository::class)]
+#[Groups("blague:read")]
 class Blague
 {
     #[ORM\Id]
