@@ -72,4 +72,19 @@ class BlagueController extends AbstractController
         return new JsonResponse($jsonContent, 200, [], true);
     }
 
+    #[Route('/random', name: 'blagues.random')]
+    public function viewRandomBlague(
+        BlagueRepository $blagueRepository,
+        SerializerInterface $serializer
+    ): JsonResponse
+    {
+        
+        $blague = $blagueRepository->findRandomBlague();
+        // Conversion des objets en JSON
+        $jsonContent = $serializer->serialize($blague, 'json', ['groups' => 'blague:read']);
+        
+        return new JsonResponse($jsonContent, 200, [], true);
+    }
+
+
 }
